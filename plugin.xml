@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-skyTxIM" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>skyTxIM</name>
+    <js-module name="skyTxIM" src="www/skyTxIM.js">
+        <clobbers target="sky.cqfw" />
+    </js-module>
+
+    <platform name="android">
+        <framework src="src/android/skyim.gradle" custom="true" type="gradleReference" />
+
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="skyTxIM">
+                <param name="android-package" value="com.skytech.skyimplugin.skyTxIM" />
+            </feature>
+        </config-file>
+
+
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.RECORD_AUDIO" />
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+        </config-file>
+
+        <source-file src="src/android/skyTxIM.java" target-dir="src/com/skytech/skyimplugin" />
+        <source-file src="src/android/TrtcIM.java" target-dir="src/com/skytech/skyimplugin" />
+        <source-file src="src/android/ConfigHelper.java" target-dir="src/com/skytech/skyimplugin" />
+        <source-file src="src/android/BackJson.java" target-dir="src/com/skytech/skyimplugin" />
+        <source-file src="src/android/NewMsgEvent.java" target-dir="src/com/skytech/skyimplugin" />
+
+
+    </platform>
+
+
+    <platform name="ios">
+	        <config-file target="config.xml" parent="/*">
+	            <feature name="skyTxIM">
+	                <param name="ios-package" value="skyTxIM"/>
+	            </feature>
+	        </config-file>
+	        <header-file src="src/ios/skyTxIM.h" />
+	        <source-file src="src/ios/skyTxIM.m" />
+            <header-file src="src/ios/CashData.h" />
+            <source-file src="src/ios/CashData.m" />
+            <header-file src="src/ios/ImChatCenter.h" />
+            <source-file src="src/ios/ImChatCenter.m" />
+            <header-file src="src/ios/TxIMDelegate.h" />
+            <source-file src="src/ios/TxIMDelegate.m" />
+	    </platform>
+</plugin>

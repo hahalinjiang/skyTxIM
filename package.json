@@ -1,0 +1,22 @@
+{
+  "name": "cordova-plugin-skyTxIM",
+  "version": "1.0.0",
+  "description": "cordova-plugin-skyTxIM Cordova plugin ========",
+  "cordova": {
+    "id": "cordova-plugin-skyTxIM",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

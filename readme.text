@@ -1,0 +1,21 @@
+说明
+
+1.正常消息格式
+{
+     "flag": "901",
+     "sendTid": "txy_Web_trtc_02",
+     "fromId": "0001",
+     "fromName": "admin5",
+     "action": "message",
+     "content": "1231323conternt"
+};
+2.被踢下线
+{"flag":"902","action":"offline","content":"被踢下线"}
+3.sig过期
+{"flag":"903","action":"expired","content":"sig过期"}
+
+注意:
+IOS{
+    1.用此插件还需将appDelegate中继承类改成TxIMDelegate.
+}
+
