@@ -1,16 +1,9 @@
 package com.skytech.skyimplugin;
 
-import android.Manifest;
-import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
-import com.yanzhenjie.permission.Action;
-import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.Permission;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -20,10 +13,7 @@ import org.apache.cordova.PluginResult;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.List;
 
 
 /**
@@ -35,7 +25,7 @@ public class skyTxIM extends CordovaPlugin {
     private CallbackContext receiveMsgCallback = null;
     private CallbackContext kickoutLineCallback = null;
     private CallbackContext sigExpiredCallback = null;
-    private TrtcIM trtcIM;
+    private TrtcIM trtcIM=null;
     private final static String TAG = "TrtcIM";
 
     @Override
@@ -52,14 +42,15 @@ public class skyTxIM extends CordovaPlugin {
         this.context = callbackContext;
         //登录
         if (action.equals("loginIM")) {
-            if (null == trtcIM) {
-                trtcIM = new TrtcIM();
+            trtcIM=null;
+            trtcIM = new TrtcIM();
+            if(!trtcIM.getIMStatus()){
+                trtcIM.initIM(cordova.getActivity(), args);
             }
-            trtcIM.initIM(cordova.getActivity(),args);
-            BackJson backJson= trtcIM.login(args);
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.login(args);
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
 
@@ -71,10 +62,10 @@ public class skyTxIM extends CordovaPlugin {
             if (null == trtcIM) {
                 trtcIM = new TrtcIM();
             }
-            BackJson backJson= trtcIM.getUserInfo();
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.getUserInfo();
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
 
@@ -86,10 +77,10 @@ public class skyTxIM extends CordovaPlugin {
             if (null == trtcIM) {
                 trtcIM = new TrtcIM();
             }
-            BackJson backJson= trtcIM.logOut();
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.logOut();
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
             return true;
@@ -100,10 +91,10 @@ public class skyTxIM extends CordovaPlugin {
                 trtcIM = new TrtcIM();
             }
 
-            BackJson backJson= trtcIM.histroyMessage(args);
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.histroyMessage(args);
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
 
@@ -115,10 +106,10 @@ public class skyTxIM extends CordovaPlugin {
                 trtcIM = new TrtcIM();
             }
 
-            BackJson backJson= trtcIM.setReadMessage(args);
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.setReadMessage(args);
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
 
@@ -130,10 +121,10 @@ public class skyTxIM extends CordovaPlugin {
                 trtcIM = new TrtcIM();
             }
 
-            BackJson backJson= trtcIM.getUnReadMessageNum(args);
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.getUnReadMessageNum(args);
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
 
@@ -145,10 +136,10 @@ public class skyTxIM extends CordovaPlugin {
                 trtcIM = new TrtcIM();
             }
 
-            BackJson backJson= trtcIM.getLastMsg(args);
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.getLastMsg(args);
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
 
@@ -160,10 +151,10 @@ public class skyTxIM extends CordovaPlugin {
                 trtcIM = new TrtcIM();
             }
 
-            BackJson backJson= trtcIM.getConversationList();
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.getConversationList();
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
 
@@ -176,10 +167,10 @@ public class skyTxIM extends CordovaPlugin {
                 trtcIM = new TrtcIM();
             }
 
-            BackJson backJson= trtcIM.sendMessage(args);
-            if(backJson.isSuccess()){
+            BackJson backJson = trtcIM.sendMessage(args);
+            if (backJson.isSuccess()) {
                 context.success(JSONObject.toJSONString(backJson));
-            }else {
+            } else {
                 context.error(JSONObject.toJSONString(backJson));
             }
             return true;
@@ -243,13 +234,12 @@ public class skyTxIM extends CordovaPlugin {
         }
 
 
-
         return false;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onShowMessageEvent(NewMsgEvent messageEvent) {
-        switch (messageEvent.getType()){
+        switch (messageEvent.getType()) {
             case 1:
                 //收到消息监听
                 BackJson backJson = new BackJson();
@@ -257,7 +247,7 @@ public class skyTxIM extends CordovaPlugin {
                 backJson.setMessage("收到新消息");
                 backJson.setSuccess(true);
                 backJson.setObj(messageEvent.getObj());
-                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, JSON.toJSONString(backJson) );
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, JSON.toJSONString(backJson));
                 pluginResult.setKeepCallback(true);
                 receiveMsgCallback.sendPluginResult(pluginResult);
                 break;
@@ -268,7 +258,7 @@ public class skyTxIM extends CordovaPlugin {
                 backickout.setMessage("被挤下线啦");
                 backickout.setSuccess(true);
                 backickout.setObj(messageEvent.getObj());
-                PluginResult kickout = new PluginResult(PluginResult.Status.OK, JSON.toJSONString(backickout) );
+                PluginResult kickout = new PluginResult(PluginResult.Status.OK, JSON.toJSONString(backickout));
                 kickout.setKeepCallback(true);
                 kickoutLineCallback.sendPluginResult(kickout);
 
@@ -280,7 +270,7 @@ public class skyTxIM extends CordovaPlugin {
                 backSigExpired.setMessage("用户签名过期了，需要刷新 userSig 重新登录 IM SDK");
                 backSigExpired.setSuccess(true);
                 backSigExpired.setObj(messageEvent.getObj());
-                PluginResult sigExpired = new PluginResult(PluginResult.Status.OK, JSON.toJSONString(backSigExpired) );
+                PluginResult sigExpired = new PluginResult(PluginResult.Status.OK, JSON.toJSONString(backSigExpired));
                 sigExpired.setKeepCallback(true);
                 sigExpiredCallback.sendPluginResult(sigExpired);
                 break;

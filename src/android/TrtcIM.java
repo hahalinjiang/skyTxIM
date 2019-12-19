@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,6 @@ import java.util.Map;
     private TIMConversation mCurrentConversation;
     private final static String TAG = "TrtcIM";
     private static TUIKitConfigs sConfigs;
-    public String userId;
     @SuppressLint("CheckResult")
 
     /**
@@ -73,6 +73,7 @@ import java.util.Map;
             sdkConfig = new TIMSdkConfig(Integer.valueOf(obj.getString("sdkAppId")));
             sConfigs.setSdkConfig(sdkConfig);
         }
+
         TIMManager.getInstance().init(context, sdkConfig);
         // 设置离线消息通知
         TIMManager.getInstance().setOfflinePushListener(new TIMOfflinePushListener() {
@@ -81,9 +82,10 @@ import java.util.Map;
 
             }
         });
-        TIMManager.getInstance().addMessageListener(this);
 
+        TIMManager.getInstance().addMessageListener(this);
         onForceOfflineOrSigExpired();
+
     }
 
 
@@ -96,7 +98,6 @@ import java.util.Map;
         JSONObject obj = (JSONObject) JSONObject.toJSON(objlist.getJSONObject(0));
         BackJson backJson = new BackJson();
         // identifier 为用户名，userSig 为用户登录凭证
-        userId=obj.getString("userId");
         final ConditionVariable conditionVariable = new ConditionVariable();
         new Thread(new Runnable() {
             @Override
@@ -162,6 +163,7 @@ import java.util.Map;
                         conditionVariable.open();
                     }
                 });
+
             }
         }).start();
         conditionVariable.block();
@@ -210,6 +212,7 @@ import java.util.Map;
                                     Log.d(TAG, map.toString());
 
                                 }
+                                Collections.reverse(list);
                                 backJson.setCode("");
                                 backJson.setMessage("历史消息获取成功");
                                 backJson.setSuccess(true);
@@ -419,9 +422,15 @@ import java.util.Map;
 
                     @Override
                     public void onSuccess(TIMMessage timMessage) {
-
-                        TUIKitLog.i(TAG, "sendMessage onSuccess");
-                        backJson.setCode("");
+                        TIMMessage msg = timMessage;
+                        Map<String, String> map = new HashMap<>();
+                        TIMTextElem elem = (TIMTextElem) msg.getElement(0);
+                        map.put("MSGID", msg.getMsgId());
+                        map.put("SENDERID", msg.getSender());
+                        map.put("CONTENT", elem.getText());
+                        map.put("TIME", getDateToString(msg.timestamp()));
+                        backJson.setObj(map);
+                        backJson.setCode("200");
                         backJson.setMessage("消息发送成功");
                         backJson.setSuccess(true);
                         conditionVariable.open();
