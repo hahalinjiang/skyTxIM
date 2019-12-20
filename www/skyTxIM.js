@@ -47,3 +47,6 @@ exports.getConversationList = function ( success, error,message) {
 exports.getOnlineUser = function ( success, error,message) {
     exec(success, error, 'skyTxIM', 'getOnlineUser', message);
 };
+exports.setNotificationNum = function ( success, error,message) {
+    exec(success, error, 'skyTxIM', 'setNotificationNum', message);
+};
