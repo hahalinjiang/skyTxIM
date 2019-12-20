@@ -80,7 +80,7 @@
     
 }
 
-+(void)getMessage:(NSString*)receiverID num:(int)num callBack:(void(^)(NSString* string))callB_S error:(void(^)(NSString*))callB_E{
++(void)getMessage:(NSString*)receiverID num:(int)num callBack:(void(^)(NSArray* array))callB_S error:(void(^)(NSString*))callB_E{
      TIMConversation * c2c_conversation = [[TIMManager sharedInstance] getConversation:TIM_C2C receiver:receiverID];
     [c2c_conversation getMessage:num last:nil succ:^(NSArray *msgs) {
         NSMutableArray* g_array = [[NSMutableArray alloc] initWithCapacity:2];
@@ -111,12 +111,12 @@
             [g_array addObject:dic];
         }
         NSLog(@"msgs = %@",msgs);
-        NSData *data = [NSJSONSerialization dataWithJSONObject:g_array
-                                                       options:NSJSONReadingMutableLeaves | NSJSONReadingAllowFragments
-                                                         error:nil];
-        NSString *string = [[NSString alloc] initWithData:data
-                                                 encoding:NSUTF8StringEncoding];
-        callB_S(string);
+//        NSData *data = [NSJSONSerialization dataWithJSONObject:g_array
+//                                                       options:NSJSONReadingMutableLeaves | NSJSONReadingAllowFragments
+//                                                         error:nil];
+//        NSString *string = [[NSString alloc] initWithData:data
+//                                                 encoding:NSUTF8StringEncoding];
+        callB_S(g_array);
     } fail:^(int code, NSString *msg) {
         NSLog(@"msg = %@",msg);
         callB_E(msg);
@@ -137,7 +137,7 @@
         NSString* g_count = [NSString stringWithFormat:@"%d",count];
         callB_S(g_count);
 }
-+(void)getLastMsg:(NSString*)receiverID callBack:(void(^)(NSString* str))callB_S
++(void)getLastMsg:(NSString*)receiverID callBack:(void(^)(NSMutableDictionary* dic))callB_S
 {
     TIMConversation * c2c_conversation = [[TIMManager sharedInstance] getConversation:TIM_C2C receiver:receiverID];
     TIMMessage* message = [c2c_conversation getLastMsg];
@@ -151,7 +151,8 @@
     //内容
     TIMTextElem* elem =  (TIMTextElem*)[message getElem:0];
     if (![elem isKindOfClass:[TIMTextElem class]]) {
-        callB_S(@"{}");
+        NSMutableDictionary* mulDic = [[NSMutableDictionary alloc]initWithCapacity:2];
+        callB_S(mulDic);
         return;
     }
     NSString* content = elem.text;
@@ -163,15 +164,15 @@
     NSString* msgID =message.msgId;
     [dic setValue:msgID forKey:@"MSGID"];
     
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dic
-                                                   options:NSJSONReadingMutableLeaves | NSJSONReadingAllowFragments
-                                                     error:nil];
-    NSString *string = [[NSString alloc] initWithData:data
-                                             encoding:NSUTF8StringEncoding];
-    callB_S(string);
+//    NSData *data = [NSJSONSerialization dataWithJSONObject:dic
+//                                                   options:NSJSONReadingMutableLeaves | NSJSONReadingAllowFragments
+//                                                     error:nil];
+//    NSString *string = [[NSString alloc] initWithData:data
+//                                             encoding:NSUTF8StringEncoding];
+    callB_S(dic);
 }
 //获取会话列表
-+(void) getConversationList:(void(^)(NSString*))callB_S{
++(void) getConversationList:(void(^)(NSMutableArray*))callB_S{
     
     NSArray* g_array = [[TIMManager sharedInstance] getConversationList];
     NSMutableArray* array = [[NSMutableArray alloc]initWithCapacity:2];
@@ -188,12 +189,29 @@
         [dic setValue:TimCon.getGroupName forKey:@"GroupName"];
         [array addObject:dic];
     }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:array
-                                                   options:NSJSONReadingMutableLeaves | NSJSONReadingAllowFragments
-                                                     error:nil];
-    NSString *string = [[NSString alloc] initWithData:data
-                                             encoding:NSUTF8StringEncoding];
-    callB_S(string);
+//    NSData *data = [NSJSONSerialization dataWithJSONObject:array
+//                                                   options:NSJSONReadingMutableLeaves | NSJSONReadingAllowFragments
+//                                                     error:nil];
+//    NSString *string = [[NSString alloc] initWithData:data
+//                                             encoding:NSUTF8StringEncoding];
+    callB_S(array);
+    
+}
+
++(void)getOnlineUser:(void(^)(NSMutableDictionary*))callB_S{
+    
+    NSString* userId = [[TIMManager sharedInstance] getLoginUser];
+    TIMLoginStatus status =  [[TIMManager sharedInstance] getLoginStatus];
+    NSMutableDictionary* dic = [[NSMutableDictionary alloc]initWithCapacity:2];
+    [dic setValue:userId forKey:@"userId"];
+    NSNumber *boolNumber = [NSNumber numberWithBool:YES];
+    if (status==TIM_STATUS_LOGINED) {
+        boolNumber = [NSNumber numberWithBool:YES];
+    }else{
+        boolNumber = [NSNumber numberWithBool:false];
+    }
+    [dic setValue:boolNumber forKey:@"offline"];
+    callB_S(dic);
     
 }
 

@@ -41,6 +41,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /*
@@ -107,7 +108,7 @@ import java.util.Map;
                     public void onError(int code, String desc) {
                         //错误码 code 和错误描述 desc，可用于定位请求失败原因
                         //错误码 code 列表请参见错误码表
-                        backJson.setCode(code + "");
+                        backJson.setCode("202");
                         backJson.setMessage(desc);
                         backJson.setSuccess(false);
                         Log.d(TAG, "login failed. code: " + code + " errmsg: " + desc);
@@ -117,7 +118,7 @@ import java.util.Map;
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "login succ");
-                        backJson.setCode("");
+                        backJson.setCode("200");
                         backJson.setMessage("login succ");
                         backJson.setSuccess(true);
                         conditionVariable.open();
@@ -147,7 +148,7 @@ import java.util.Map;
                         //错误码 code 和错误描述 desc，可用于定位请求失败原因`
                         //错误码 code 列表请参见错误码表
                         Log.d(TAG, "logout failed. code: " + code + " errmsg: " + desc);
-                        backJson.setCode(code + "");
+                        backJson.setCode("202");
                         backJson.setMessage(desc);
                         backJson.setSuccess(false);
                         conditionVariable.open();
@@ -157,7 +158,7 @@ import java.util.Map;
                     public void onSuccess() {
                         //登出成功
                         Log.d(TAG, "logout success");
-                        backJson.setCode("");
+                        backJson.setCode("200");
                         backJson.setMessage("logout success");
                         backJson.setSuccess(true);
                         conditionVariable.open();
@@ -192,7 +193,7 @@ import java.util.Map;
                             @Override
                             public void onError(int code, String desc) {
                                 TUIKitLog.e(TAG, "loadChatMessages() getMessage failed, code = " + code + ", desc = " + desc);
-                                backJson.setCode(code + "");
+                                backJson.setCode("202");
                                 backJson.setMessage(desc);
                                 backJson.setSuccess(false);
                                 conditionVariable.open();
@@ -213,7 +214,7 @@ import java.util.Map;
 
                                 }
                                 Collections.reverse(list);
-                                backJson.setCode("");
+                                backJson.setCode("200");
                                 backJson.setMessage("历史消息获取成功");
                                 backJson.setSuccess(true);
                                 backJson.setList(list);
@@ -246,7 +247,7 @@ import java.util.Map;
                     @Override
                     public void onError(int code, String desc) {
                         TUIKitLog.e(TAG, "loadChatMessages() setReadMessage failed, code = " + code + ", desc = " + desc);
-                        backJson.setCode(code + "");
+                        backJson.setCode("202");
                         backJson.setMessage(desc);
                         backJson.setSuccess(false);
                         conditionVariable.open();
@@ -255,7 +256,7 @@ import java.util.Map;
 
                     @Override
                     public void onSuccess() {
-                        backJson.setCode("");
+                        backJson.setCode("200");
                         backJson.setMessage("设置消息为已读");
                         backJson.setSuccess(true);
                         conditionVariable.open();
@@ -305,12 +306,12 @@ import java.util.Map;
             Map<String, String> map = new HashMap<>();
             map.put("num", num + "");
             backJson.setObj(map);
-            backJson.setCode("");
+            backJson.setCode("200");
             backJson.setMessage("获取未读数量成功");
             backJson.setSuccess(true);
         } catch (Exception e) {
             backJson.setObj(e);
-            backJson.setCode("");
+            backJson.setCode("202");
             backJson.setMessage("获取未读数量识别");
             backJson.setSuccess(false);
         }
@@ -340,12 +341,12 @@ import java.util.Map;
             map.put("CONTENT", elem.getText());
             map.put("TIME", getDateToString(msg.timestamp()));
             backJson.setObj(map);
-            backJson.setCode("");
+            backJson.setCode("200");
             backJson.setMessage("获取最近一条消息成功");
             backJson.setSuccess(true);
         } catch (Exception e) {
             backJson.setObj(e);
-            backJson.setCode("");
+            backJson.setCode("202");
             backJson.setMessage("获取最近一条消息失败");
             backJson.setSuccess(false);
         }
@@ -373,7 +374,7 @@ import java.util.Map;
 
                 listObj.add(map);
                 backJson.setList(listObj);
-                backJson.setCode("");
+                backJson.setCode("200");
                 backJson.setMessage("获取会话列表成功");
                 backJson.setSuccess(true);
 
@@ -383,7 +384,7 @@ import java.util.Map;
             }
         } catch (Exception e) {
             backJson.setObj(e);
-            backJson.setCode("");
+            backJson.setCode("202");
             backJson.setMessage("获取会话列表失败");
             backJson.setSuccess(false);
         }
@@ -413,7 +414,7 @@ import java.util.Map;
                     @Override
                     public void onError(final int code, final String desc) {
                         TUIKitLog.i(TAG, "sendMessage fail:" + code + "=" + desc);
-                        backJson.setCode(code + "");
+                        backJson.setCode("202");
                         backJson.setMessage(desc);
                         backJson.setSuccess(false);
                         conditionVariable.open();
@@ -530,7 +531,7 @@ import java.util.Map;
      */
     public String getDateToString(long time) {
         Date date = new Date(time * 1000);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
         return format.format(date);
     }
 }

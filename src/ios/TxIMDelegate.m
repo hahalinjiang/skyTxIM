@@ -133,7 +133,7 @@
         unReadCount += [conv getUnReadMessageNum];
     }
 //    [UIApplication sharedApplication].applicationIconBadgeNumber = unReadCount;
- [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+// [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     //doBackground
     TIMBackgroundParam  *param = [[TIMBackgroundParam alloc] init];
     [param setC2cUnread:unReadCount];

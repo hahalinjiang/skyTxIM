@@ -205,6 +205,7 @@ sky.cqfw.loginOutIM(function (success) {
 |:-----  |:-----|-----                           |
 |code  |string   |三个事件监听，监听成功返回201、有数据返回 200、错误返回202 |
 |obj  |Object   |返回单个对象 |
+|message  |String   |返回当前描述 |
 |list  |Object   |返回列表 |
 |success  |Boolean   |返回成功失败状态 |
 

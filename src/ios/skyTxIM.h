@@ -24,14 +24,17 @@ NS_ASSUME_NONNULL_BEGIN
 +(void)SendImMessageToJs:(NSString*)messgae;
 +(void)sendKickOff:(NSString*)message;
 +(void)sendSigExpired:(NSString*)message;
-
 -(void)getConversationList:(CDVInvokedUrlCommand*)command;
 -(void)getLastMsg:(CDVInvokedUrlCommand*)command;
 //获取未读数目
 -(void)getUnReadMessageNum:(CDVInvokedUrlCommand*)command;
 //设置已读
 -(void)setReadMessage:(CDVInvokedUrlCommand*)command;
-
+//设置通知数量
+-(void)setNotificationNum:(CDVInvokedUrlCommand*)command;
+//获取用户数量
+-(void)getOnlineUser:(CDVInvokedUrlCommand*)command;
+-(NSString*)objectToJson:(id) o_bject;
 @end
 
 NS_ASSUME_NONNULL_END
