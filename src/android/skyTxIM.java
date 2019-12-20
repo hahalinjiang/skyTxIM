@@ -233,7 +233,12 @@ public class skyTxIM extends CordovaPlugin {
             return true;
         }
 
+        //设置未读数量
+        if (action.equals("setNotificationNum")) {
+            Log.d(TAG, "进入sig过期监听");
 
+            return true;
+        }
         return false;
     }
 
