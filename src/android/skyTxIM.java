@@ -3,7 +3,9 @@ package com.skytech.skyimplugin;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.test1.MainActivity;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -14,6 +16,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
+
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 
 /**
@@ -235,7 +239,31 @@ public class skyTxIM extends CordovaPlugin {
 
         //设置未读数量
         if (action.equals("setNotificationNum")) {
-            Log.d(TAG, "进入sig过期监听");
+            Log.d(TAG, "设置未读数量");
+            try {
+                boolean success = ShortcutBadger.applyCount(cordova.getContext(),Integer.valueOf(args) );
+                if(success){
+                    BackJson backJson = new BackJson();
+                    backJson.setCode("200");
+                    backJson.setMessage("设置数量成功");
+                    backJson.setSuccess(true);
+                    context.success(JSONObject.toJSONString(backJson));
+
+                }else {
+                    BackJson backJson = new BackJson();
+                    backJson.setCode("202");
+                    backJson.setMessage("设置数量失败");
+                    backJson.setSuccess(false);
+                    context.error(JSONObject.toJSONString(backJson));
+
+                }
+            }catch (Exception e){
+                BackJson backJson = new BackJson();
+                backJson.setCode("202");
+                backJson.setMessage("设置数量失败");
+                backJson.setSuccess(false);
+                context.error(JSONObject.toJSONString(backJson));
+            }
 
             return true;
         }
